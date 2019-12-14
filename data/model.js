@@ -16,8 +16,19 @@ function getProjects() {
   return db('projects');
 }
 
-function getTasks(projectId) {
-  return db('tasks');
+function getTasks() {
+  return db('projects')
+    .select(
+      'projects.name',
+      'projects.description',
+      'tasks.description',
+      'tasks.notes',
+      'tasks.completed'
+    )
+    .join('tasks', 'projects.id', 'tasks.project_id')
+    .then(item =>
+      item.completed === 1 ? { completed: true } : { completed: false }
+    );
 }
 
 function getResources() {
